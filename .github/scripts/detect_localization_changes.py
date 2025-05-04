@@ -73,28 +73,23 @@ def get_lang_specific_diff(old: Dict[str,str], new: Dict[str,str]):
     for file_name in glob.glob(str(LOCALIZATION_DIR/"*.json")):
         if file_name.endswith('en.json'):
             continue
-        if not file_name.endswith('ua.json'):
-            continue
 
         js_data = load_json(file_name)
         added, removed, _, renamed = compare_dicts_new(js_data, new)
-        print("removed_en", removed_en)
-        print("removed", removed)
-        print("added_en", added_en)
-        print(file_name.split('\\')[-1], 'also missing ', added - added_en, 'removed', removed - removed_en )
+        # print(file_name.split('\\')[-1], 'also missing ', added - added_en, 'removed', removed - removed_en )
         # create template
-        template = {k: js_data.get(k, new[k]) for k, v in new.items()}
+        template = {k: js_data.get(k, new[k]) for k,v in new.items()}
         for name_old, name_new in renamed_en:
             if name_old in js_data:
                 template[name_new] = js_data[name_old]
-                
+
         # template = new
         # for k,v in new.items():
         #     if k in js_data:
         #         template[k] = js_data[k]
         # templates[os.path.basename(file_name)] = template
         template_str = json.dumps(template, indent=4, ensure_ascii=False)
-        for add in added_en:
+        for add in added:
             template_str = template_str.replace(f'  "{add}":', f'//  "{add}":')
         for add in added - added_en:
             template_str = template_str.replace(f'  "{add}":', f'//⚠️  "{add}":')
@@ -163,7 +158,7 @@ def main():
         if len(missing):
             part_body += f"\n\n### {key}\n\n"
         for key2 in missing:
-            part_body += f"- ⚠️ Key '{key2}' is also missing in `{key}`!\n\n"
+            part_body+= f"- ⚠️ Key '{key2}' is also missing in `{key}`!\n\n"
         part_body += (
             "\n\n<details>\n\n"
             f"  <summary>Template for {key}</summary>\n\n\n\n"
