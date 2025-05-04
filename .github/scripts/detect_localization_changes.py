@@ -17,7 +17,7 @@ if len(sys.argv) == 2:
         PREV_COMMIT = "HEAD^"
 else:
     PREV_COMMIT = sys.argv[2]
-BRANCH = sys.argv[1].split('/')[0]
+BRANCH = sys.argv[1].split('/')[-1]
 
 print(f'Comparing to commit {PREV_COMMIT}')
 
