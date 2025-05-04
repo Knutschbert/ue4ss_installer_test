@@ -2,6 +2,7 @@ import os
 import json
 from pathlib import Path
 from github import Github
+from typing import Dict
 import sys
 
 LOCALIZATION_DIR = Path("assets/base/assets/localization")
@@ -16,7 +17,7 @@ if len(sys.argv) == 1:
         PREV_COMMIT = "HEAD^"
 else:
     PREV_COMMIT = sys.argv[1]
-    
+
 print(f'Comparing to commit {PREV_COMMIT}')
 
 def load_json(path):
