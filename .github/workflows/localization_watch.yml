@@ -1,9 +1,20 @@
 name: Localization Change Watcher
 
 on:
-  push:
-    paths:
-      - 'assets/base/assets/localization/**'
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit to compare to (last by default)'
+        type: string
+        default: 'HEAD^'
+        required: true
+      branch:
+        description: 'Branch to check out'
+        type: string
+        default: 'loc_wf'
+  # push:
+  #   paths:
+  #     - 'assets/base/assets/localization/**'
 
 jobs:
   check-localization:
@@ -14,7 +25,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.ref }}
+          ref: ${{ github.events.input.branch }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -28,6 +39,6 @@ jobs:
         run: pip3 install PyGithub
 
       - name: Run localization diff script
-        run: python .github/scripts/detect_localization_changes.py
+        run: python .github/scripts/detect_localization_changes.py ${{ github.events.input.commit }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

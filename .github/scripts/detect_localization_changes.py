@@ -2,10 +2,22 @@ import os
 import json
 from pathlib import Path
 from github import Github
+import sys
 
 LOCALIZATION_DIR = Path("assets/base/assets/localization")
 EN_PATH = LOCALIZATION_DIR / "en.json"
+EN_PATH_F = str(EN_PATH).replace('\\', '/')
 MAINTAINERS_PATH = Path("localization_maintainers.json")
+
+if len(sys.argv) == 1:
+    if os.name == 'nt':
+        PREV_COMMIT = "HEAD^^"
+    else:
+        PREV_COMMIT = "HEAD^"
+else:
+    PREV_COMMIT = sys.argv[1]
+    
+print(f'Comparing to commit {PREV_COMMIT}')
 
 def load_json(path):
     with open(path, encoding="utf-8") as f:
@@ -16,20 +28,31 @@ def load_previous_en_json():
     prev_content = os.popen("git show HEAD^:assets/base/assets/localization/en.json").read()
     return json.loads(prev_content)
 
-def compare_dicts(old, new):
+def compare_dicts_new(old: Dict[str,str], new: Dict[str,str]):
+    old_s = set(old)
+    new_s = set(new)
+    added = new_s - old_s
+    removed = old_s - new_s
+    changed = {k for k in new_s & old_s if new[k] != old[k]}
+
+    return added, removed, changed
+
+def get_json_difference(old: Dict[str,str], new: Dict[str,str]):
     changes = []
-    for key in new:
-        if key not in old:
-            changes.append(f"🆕 Key '{key}' added with text: \"{new[key]}\"")
-        elif old[key] != new[key]:
-            changes.append(f"✏️ Key '{key}' changed from \"{old[key]}\" to \"{new[key]}\"")
+    added, removed, changed = compare_dicts_new(old, new)
+    for key in added:
+        changes.append(f"🆕 Key '{key}' added with text: \"{new[key]}\"")
+    for key in changed:
+        changes.append(f"✏️ Key '{key}' changed from \"{old[key]}\" to \"{new[key]}\"")
+    for key in removed:
+        changes.append(f"❌ Key '{key}' was removed")
     return changes
 
 def main():
-    changed_files = os.popen("git diff --name-only HEAD^ HEAD").read().splitlines()
-    if "assets/base/assets/localization/en.json" not in changed_files:
-        print("en.json not changed, exiting.")
-        return
+    # changed_files = os.popen("git diff --name-only HEAD^ HEAD").read().splitlines()
+    # if "assets/base/assets/localization/en.json" not in changed_files:
+    #     print("en.json not changed, exiting.")
+    #     return
 
     if not EN_PATH.exists():
         print("en.json not found in working tree.")
@@ -42,7 +65,8 @@ def main():
         return
 
     current_en = load_json(EN_PATH)
-    changes = compare_dicts(prev_en, current_en)
+    # changes = compare_dicts(prev_en, current_en)
+    changes = get_json_difference(prev_en, current_en)
 
     if not changes:
         print("No changes in en.json content.")
