@@ -73,7 +73,7 @@ def get_lang_specific_diff(old: Dict[str,str], new: Dict[str,str]):
     for file_name in glob.glob(str(LOCALIZATION_DIR/"*.json")):
         if file_name.endswith('en.json'):
             continue
-
+        
         js_data = load_json(file_name)
         added, removed, _, renamed = compare_dicts_new(js_data, new)
         # print(file_name.split('\\')[-1], 'also missing ', added - added_en, 'removed', removed - removed_en )
@@ -89,12 +89,13 @@ def get_lang_specific_diff(old: Dict[str,str], new: Dict[str,str]):
         #         template[k] = js_data[k]
         # templates[os.path.basename(file_name)] = template
         template_str = json.dumps(template, indent=4, ensure_ascii=False)
-        for add in added:
+        for add in added & added_en:
             template_str = template_str.replace(f'  "{add}":', f'//  "{add}":')
         for add in added - added_en:
             template_str = template_str.replace(f'  "{add}":', f'//⚠️  "{add}":')
         for (old_ren, new_ren) in renamed_en:
-            template_str = template_str.replace(f'  "{new_ren}":', f'// renamed "{old_ren}" to "{new_ren}"\n  "{new_ren}":')
+            if new_ren not in added:
+                template_str = template_str.replace(f'  "{new_ren}":', f'// renamed "{old_ren}" to "{new_ren}"\n  "{new_ren}":')
         
         templates[os.path.basename(file_name)] = (template_str, added - added_en)
     return templates
@@ -138,12 +139,15 @@ def main():
         for user in users:
             ment[user].append(filename)
 
+    git_rev_head = os.popen("git rev-parse HEAD").read()
+
     issue_title = "🔤 Localization update needed"
     issue_body = (
         f"The base localization file [en.json](../../blob/{BRANCH}/{EN_PATH_F}) has been updated. "
         "Please ensure translations are updated accordingly.\n\n"
         f"\n\nBranch: [{BRANCH}](../tree/{BRANCH})\n\n"
         f"\n\nStart Commit: [{PREV_COMMIT[:6]}](../commit/{PREV_COMMIT.replace('^','')})\n\n"
+        f"\n\nCurrent Commit: [{git_rev_head[:6]}](../commit/{git_rev_head.replace('^','')})\n\n"
         "### Summary of changes:\n"
         + "\n".join(f"- {change}" for change in changes)
         + "\n\n"
@@ -155,10 +159,9 @@ def main():
     
     for key, (template_str, missing) in templates.items():
         part_body = ""
-        if len(missing):
-            part_body += f"\n\n### {key}\n\n"
+        part_body += f"\n\n### {key}\n\n"
         for key2 in missing:
-            part_body+= f"- ⚠️ Key '{key2}' is also missing in `{key}`!\n\n"
+            part_body+= f" - ⚠️ Key '{key2}' is also missing in `{key}`!\n\n"
         part_body += (
             "\n\n<details>\n\n"
             f"  <summary>Template for {key}</summary>\n\n\n\n"
