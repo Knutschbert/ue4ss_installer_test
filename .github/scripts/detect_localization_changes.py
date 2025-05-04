@@ -10,13 +10,14 @@ EN_PATH = LOCALIZATION_DIR / "en.json"
 EN_PATH_F = str(EN_PATH).replace('\\', '/')
 MAINTAINERS_PATH = Path("localization_maintainers.json")
 
-if len(sys.argv) == 1:
+if len(sys.argv) == 2:
     if os.name == 'nt':
         PREV_COMMIT = "HEAD^^"
     else:
         PREV_COMMIT = "HEAD^"
 else:
-    PREV_COMMIT = sys.argv[1]
+    PREV_COMMIT = sys.argv[2]
+BRANCH = sys.argv[1]
 
 print(f'Comparing to commit {PREV_COMMIT}')
 
@@ -84,8 +85,10 @@ def main():
 
     issue_title = "🔤 Localization update needed"
     issue_body = (
-        "The base localization file `en.json` has been updated. "
+        f"The base localization file [en.json](../../blob/{BRANCH}/assets/base/assets/localization/en.json) has been updated. "
         "Please ensure translations are updated accordingly.\n\n"
+        f"\n\nBranch: [{BRANCH}](../../blob/{BRANCH})\n\n"
+        f"\n\nStart Commit: [{PREV_COMMIT}](commit/{PREV_COMMIT})\n\n"
         "### Summary of changes:\n"
         + "\n".join(f"- {change}" for change in changes)
         + "\n\n"
