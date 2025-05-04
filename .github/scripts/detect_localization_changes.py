@@ -26,7 +26,7 @@ def load_json(path):
 
 def load_previous_en_json():
     # Get previous version of en.json from Git
-    prev_content = os.popen("git show HEAD^:assets/base/assets/localization/en.json").read()
+    prev_content = os.popen(f"git show {PREV_COMMIT}:{EN_PATH_F}").read()
     return json.loads(prev_content)
 
 def compare_dicts_new(old: Dict[str,str], new: Dict[str,str]):

@@ -35,6 +35,6 @@ jobs:
         run: pip3 install PyGithub
 
       - name: Run localization diff script
-        run: python .github/scripts/detect_localization_changes.py ${{ github.events.input.commit }}
+        run: python .github/scripts/detect_localization_changes.py ${{ github.event.inputs.commit }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
