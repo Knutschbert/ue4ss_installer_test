@@ -17,7 +17,7 @@ if len(sys.argv) == 2:
         PREV_COMMIT = "HEAD^"
 else:
     PREV_COMMIT = sys.argv[2]
-BRANCH = sys.argv[1]
+BRANCH = sys.argv[1].split('/')[0]
 
 print(f'Comparing to commit {PREV_COMMIT}')
 
@@ -88,7 +88,7 @@ def main():
         f"The base localization file [en.json](../../blob/{BRANCH}/{EN_PATH_F}) has been updated. "
         "Please ensure translations are updated accordingly.\n\n"
         f"\n\nBranch: [{BRANCH}](../tree/{BRANCH})\n\n"
-        f"\n\nStart Commit: [../{PREV_COMMIT}](commit/{PREV_COMMIT})\n\n"
+        f"\n\nStart Commit: [{PREV_COMMIT[:6]}](../commit/{PREV_COMMIT})\n\n"
         "### Summary of changes:\n"
         + "\n".join(f"- {change}" for change in changes)
         + "\n\n"
