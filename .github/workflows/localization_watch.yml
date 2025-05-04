@@ -8,10 +8,6 @@ on:
         type: string
         default: 'HEAD^'
         required: true
-      branch:
-        description: 'Branch to check out'
-        type: string
-        default: 'loc_wf'
   # push:
   #   paths:
   #     - 'assets/base/assets/localization/**'
@@ -25,7 +21,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.events.input.branch }}
+          ref: ${{ github.ref }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
