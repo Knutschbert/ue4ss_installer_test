@@ -34,9 +34,7 @@
   "uninstall_succeeded_message_text": "The uninstall was successful",
   "uninstalling_old_ue4ss_files_step_text": "Uninstalling old UE4SS files",
   "uninstalling_ue4ss_task_text": "Uninstalling UE4SS",
-  "TEST": "Hallo I changed now again",
-  "test_locstring": "Hallo I was added now again",
-  "test_teststring": "This key was added",
-  "test_teststring2": "Another was added",
-  "test_teststring3": "Another one"
+  "test_teststring": "This key was changed",
+  "test_teststring2": "Another was changed",
+  "test_teststring3": "Another one blablabla"
 }
