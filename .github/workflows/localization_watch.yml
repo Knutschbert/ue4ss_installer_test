@@ -1,4 +1,4 @@
-name: Localization Change Watcher
+name: Localization Update request
 
 on:
   workflow_dispatch:
@@ -31,8 +31,8 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Install PyGithub
-        run: pip3 install PyGithub
+      - name: Install python dependencies
+        run: pip3 install PyGithub pycountry
 
       - name: Run localization diff script
         run: python .github/scripts/detect_localization_changes.py ${{ github.ref }} ${{ github.event.inputs.commit }}

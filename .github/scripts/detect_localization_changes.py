@@ -6,6 +6,7 @@ from typing import Dict
 import sys
 import glob
 from collections import defaultdict
+import pycountry
 
 LOCALIZATION_DIR = Path("assets/base/assets/localization")
 EN_PATH = LOCALIZATION_DIR / "en.json"
@@ -159,15 +160,29 @@ def main():
     
     for key, (template_str, missing) in templates.items():
         part_body = ""
-        part_body += f"\n\n### {key}\n\n"
-        for key2 in missing:
-            part_body+= f" - ⚠️ Key '{key2}' is also missing in `{key}`!\n\n"
+
+        language_code = key.split('.')[0].upper().split('_')[0]
+        country_code = language_code
+        country_info = pycountry.languages.get(alpha_2=language_code)
+        if country_info is not None:
+            country_code = country_info.alpha_2
+            country = pycountry.countries.search_fuzzy(country_info.alpha_3)
+            if country is not None:
+                country_code = country[0].alpha_2
+        flag_url = f"https://raw.githubusercontent.com/exyte/FlagAndCountryCode/refs/heads/main/Sources/FlagAndCountryCode/Resources/CountryFlags.xcassets/{country_code}.imageset/{country_code}.png"
+
+        part_body += f"\n\n## {key}\n\n"
         part_body += (
+            f"![{country_info}_flag]({flag_url}) [Edit {key} on Github](../edit/{BRANCH}/assets/base/assets/localization/{key})\n\n"
             "\n\n<details>\n\n"
-            f"  <summary>Template for {key}</summary>\n\n\n\n"
+            f"  <summary>Template for <b>{key}</b></summary>\n\n\n\n"
             f"  ```json\n\n  {template_str}\n\n  ```\n\n"
             "</details>\n\n"
         )
+        if len(missing):
+            part_body += "### Warnings\n\n"
+        for key2 in missing:
+            part_body+= f"- ⚠️ `{key2}` is missing!\n\n"
         issue_body += part_body
 
 
