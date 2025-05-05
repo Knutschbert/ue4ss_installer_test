@@ -1,0 +1,18 @@
+name: Manual Trigger - Use External Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-external-python-action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your own repo
+        uses: actions/checkout@v4
+
+      - name: Run Python Action from external repo
+        uses: Knutschbert/create-localization-issue@main  # Or better: use a commit SHA or tag
+        with:
+          input-one: "Hello from my repo!"
+          input-two: "Hello from my repo2!"
