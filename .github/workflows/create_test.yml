@@ -15,7 +15,11 @@ jobs:
         id: run_action
         uses: Knutschbert/create-localization-issue@main  # Or better: use a commit SHA or tag
         with:
-          input-one: "Hello from my repo!"
-          input-two: "Hello from my repo2!"
+          # base_dir: ""
+          # base_file: ""
+          branch: "loc_wf"
+          commit: "afea18f6f1cda5c8db8e31dfec8edf7e04624f90"
+          # maintainers: ""
+          # template: ""
       - name: Print outputs
         run: echo "One ${{ steps.run_action.outputs.output-one }} Two ${{ steps.run_action.outputs.output-two }}"
