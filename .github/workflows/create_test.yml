@@ -26,3 +26,12 @@ jobs:
           # template: ""
       - name: Print outputs
         run: echo "One ${{ steps.run_action.outputs.issue-title }} Two ${{ steps.run_action.outputs.issue-body }}"
+      - name: Create issue
+        uses: peter-evans/create-issue@v5
+        with:
+          title: ${{ steps.run_action.outputs.issue-title }}
+          body: ${{ steps.run_action.outputs.issue-body }}
+          labels: |
+            localization
+            automated
+            help wanted
