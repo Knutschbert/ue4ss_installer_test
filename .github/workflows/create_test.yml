@@ -1,7 +1,18 @@
-name: Manual Trigger - Use External Action
+name: Create localization help issue
 
 on:
   workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit to compare to (last by default)'
+        type: string
+        default: 'HEAD^'
+        required: true
+      template:
+        description: 'Custom YAML template for Markdown (if needed)'
+        type: string
+        default: '/scripts/template.yml'
+        required: true
 
 jobs:
   call-external-python-action:
@@ -21,11 +32,11 @@ jobs:
           # base_dir: ""
           # base_file: ""
           branch: ${{ github.ref }}
-          commit: "afea18f6f1cda5c8db8e31dfec8edf7e04624f90"
+          commit: ${{ github.event.inputs.commit }}
           # maintainers: ""
-          # template: ""
-      - name: Print outputs
-        run: echo "One ${{ steps.run_action.outputs.issue-title }} Two ${{ steps.run_action.outputs.issue-body }}"
+          template: ${{ github.event.inputs.template }}
+      # - name: Print outputs
+      #   run: echo "One ${{ steps.run_action.outputs.issue-title }} Two ${{ steps.run_action.outputs.issue-body }}"
       - name: Create issue
         uses: dacbd/create-issue-action@main
         with:
