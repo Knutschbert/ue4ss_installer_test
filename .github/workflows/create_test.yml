@@ -43,7 +43,7 @@ jobs:
           token: ${{ github.token }}
           title: ${{ steps.run_action.outputs.issue-title }}
           body: ${{ steps.run_action.outputs.issue-body }}
-          labels: |
-            localization
-            automated
-            help wanted
+          labels:
+            - localization
+            - automated
+            - help wanted
