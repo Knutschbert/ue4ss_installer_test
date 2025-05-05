@@ -12,7 +12,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Python Action from external repo
+        id: run_action
         uses: Knutschbert/create-localization-issue@main  # Or better: use a commit SHA or tag
         with:
           input-one: "Hello from my repo!"
           input-two: "Hello from my repo2!"
+      - name: Print outputs
+        run: echo "One ${{ steps.run_action.outputs.output-one }} Two ${{ steps.run_action.outputs.output-two }}"
