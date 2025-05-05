@@ -10,6 +10,9 @@ jobs:
     steps:
       - name: Checkout your own repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
 
       - name: Run Python Action from external repo
         id: run_action
@@ -17,7 +20,7 @@ jobs:
         with:
           # base_dir: ""
           # base_file: ""
-          branch: "loc_wf"
+          branch: ${{ github.ref }}
           commit: "afea18f6f1cda5c8db8e31dfec8edf7e04624f90"
           # maintainers: ""
           # template: ""
