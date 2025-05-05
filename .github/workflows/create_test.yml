@@ -25,4 +25,4 @@ jobs:
           # maintainers: ""
           # template: ""
       - name: Print outputs
-        run: echo "One ${{ steps.run_action.outputs.output-one }} Two ${{ steps.run_action.outputs.output-two }}"
+        run: echo "One ${{ steps.run_action.outputs.issue-title }} Two ${{ steps.run_action.outputs.issue-body }}"
