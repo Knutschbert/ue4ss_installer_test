@@ -73,5 +73,5 @@ jobs:
               --method POST \
               --header "Authorization: Bearer $GITHUB_TOKEN" \
               --header "Accept: application/vnd.github.v3+json" \
-              --field body="$comment"
+              --raw-field body="$comment"
           done
