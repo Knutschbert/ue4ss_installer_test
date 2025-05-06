@@ -68,11 +68,11 @@ jobs:
           ISSUE_NUMBER: ${{ steps.create_issue.outputs.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "$COMMENTS" | jq -c '.[]' | while read -r comment; do
+          echo "$COMMENTS" | jq -r '.[]' | while read -r comment; do
             echo "Creating comment: $comment"
             gh api repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments \
               --method POST \
               --header "Authorization: Bearer $GITHUB_TOKEN" \
               --header "Accept: application/vnd.github.v3+json" \
-              --field body="$comment"
+              --field body=$comment
           done
