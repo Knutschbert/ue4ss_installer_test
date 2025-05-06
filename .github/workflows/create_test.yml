@@ -21,6 +21,14 @@ on:
         - 'false'
         default: 'false'
         required: true
+      js-patch:
+        description: 'use git diff for JSON templates (for large repos)'
+        required: false
+        type: choice
+        options:
+        - 'True'
+        - 'False'
+        default: 'False'
 
 jobs:
   call-external-python-action:
