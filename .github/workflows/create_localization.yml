@@ -56,8 +56,8 @@ jobs:
           template: ${{ github.event.inputs.template }}
           disable-mentions: ${{ github.event.inputs.disable-mentions }}
           js-patch: ${{ github.event.inputs.js-patch }}
-      # - name: Print outputs
-      #   run: echo "One ${{ steps.run_action.outputs.issue-title }} Two ${{ steps.run_action.outputs.issue-body }}"
+      - name: Print outputs
+        run: echo "Title ${{ steps.run_action.outputs.issue-title }} Comments ${{ toJSON(steps.run_action.outputs.comments) }}"
       - name: Create issue
         id: create_issue
         uses: dacbd/create-issue-action@main
@@ -73,7 +73,7 @@ jobs:
     needs: call-external-python-action
     strategy:
       matrix:
-        comment: ${{ needs.call-external-python-action.outputs.comments }}
+        comment: ${{ fromJSON(needs.call-external-python-action.outputs.comments) }}
     
     steps:
       - name: create comment
