@@ -61,21 +61,6 @@ jobs:
           body: ${{ steps.run_action.outputs.issue-body }}
           labels: |
             localization, automated, help wanted
-
-      - name: Create comments in a loop
-        env:
-          COMMENTS: ${{ steps.run_action.outputs.comments }}
-          ISSUE_NUMBER: ${{ steps.create_issue.outputs.number }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "$COMMENTS" | jq -c '.[]' | while read -r comment; do
-            echo "Creating comment: $comment"
-            gh api repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments \
-              --method POST \
-              --header "Authorization: Bearer $GITHUB_TOKEN" \
-              --header "Accept: application/vnd.github.v3+json" \
-              --raw-field body="$comment"
-          done
       - name: Create issue comments in a loop
         shell: bash
         env:
