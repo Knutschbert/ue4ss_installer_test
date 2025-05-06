@@ -64,11 +64,6 @@ jobs:
             automated
             help wanted
 
-      - name: Install GitHub CLI
-        uses: cli/cli-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create comments in a loop
         env:
           COMMENTS: ${{ steps.run_action.outputs.comments }}
