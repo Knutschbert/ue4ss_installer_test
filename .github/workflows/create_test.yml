@@ -17,13 +17,13 @@ on:
         description: 'Print mentions as string'
         type: choice
         options:
-        - 'true'
-        - 'false'
-        default: 'false'
+        - 'True'
+        - 'False'
+        default: 'False'
         required: true
       js-patch:
         description: 'use git diff for JSON templates (for large repos)'
-        required: false
+        required: true
         type: choice
         options:
         - 'True'
@@ -52,6 +52,7 @@ jobs:
           # maintainers: ""
           template: ${{ github.event.inputs.template }}
           disable-mentions: ${{ github.event.inputs.disable-mentions }}
+          js-patch: ${{ github.event.inputs.js-patch }}
       # - name: Print outputs
       #   run: echo "One ${{ steps.run_action.outputs.issue-title }} Two ${{ steps.run_action.outputs.issue-body }}"
       - name: Create issue
