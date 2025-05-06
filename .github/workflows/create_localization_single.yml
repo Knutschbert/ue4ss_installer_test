@@ -76,3 +76,20 @@ jobs:
               --header "Accept: application/vnd.github.v3+json" \
               --raw-field body="$comment"
           done
+      - name: Create issue comments in a loop
+        shell: bash
+        env:
+          COMMENTS: ${{ steps.run_action.outputs.comments }}
+          ISSUE_NUMBER: ${{ steps.create_issue.outputs.number }}
+          GITHUB_TOKEN: ${{ inputs.github-token }}
+        run: |
+          echo "$COMMENTS" | jq -r '.[]' | while read -r comment; do
+            unescape=$(printf "%b" "$comment")
+            echo "Comment:"
+            echo "$unescape"
+            gh api repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments \
+              --method POST \
+              --header "Authorization: Bearer $GITHUB_TOKEN" \
+              --header "Accept: application/vnd.github.v3+json" \
+              --field body="$unescape"
+          done
