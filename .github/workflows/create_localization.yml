@@ -73,7 +73,7 @@ jobs:
     needs: [define-matrix, call-external-python-action]
     strategy:
       matrix:
-        comment: ${{ steps.run_action.outputs.comments }}
+        comment: ${{ needs.call-external-python-action.outputs.comments }}
     
     steps:
       - name: create comment
