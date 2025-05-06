@@ -80,4 +80,4 @@ jobs:
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ needs.call-external-python-action.outputs.issue_number }}
-          body: ${{ matrix.comment }}
+          body: ${{ fromJSON(matrix.comment) }}
