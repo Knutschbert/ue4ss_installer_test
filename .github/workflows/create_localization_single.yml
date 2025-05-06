@@ -60,9 +60,7 @@ jobs:
           title: ${{ steps.run_action.outputs.issue-title }}
           body: ${{ steps.run_action.outputs.issue-body }}
           labels: |
-            localization
-            automated
-            help wanted
+            localization, automated, help wanted
 
       - name: Create comments in a loop
         env:
