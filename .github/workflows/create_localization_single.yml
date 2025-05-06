@@ -66,9 +66,9 @@ jobs:
         env:
           COMMENTS: ${{ steps.run_action.outputs.comments }}
           ISSUE_NUMBER: ${{ steps.create_issue.outputs.number }}
-          GITHUB_TOKEN: ${{ inputs.github-token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "$COMMENTS" | jq -r '.[]' | while read -r comment; do
+          echo "$COMMENTS" | jq -c '.[]' | while read -r comment; do
             unescape=$(printf "%b" "$comment")
             echo "Comment:"
             echo "$unescape"
