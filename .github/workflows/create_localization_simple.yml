@@ -1,0 +1,60 @@
+name: (EZ) Create Localization Help Issue
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit to compare to (last by default)'
+        type: string
+        default: 'afea18f6f1cda5c8db8e31dfec8edf7e04624f90'
+        required: true
+      template:
+        description: 'Custom YAML template for Markdown (if needed)'
+        type: string
+        default: '/scripts/template.yml'
+        required: true
+      disable-mentions:
+        description: 'Print mentions as string'
+        type: choice
+        options: [ 'True', 'False' ]
+        default: 'False'
+        required: true
+      js-patch:
+        description: 'Show JSON templates as diff'
+        required: true
+        type: choice
+        options: [ 'True', 'False' ]
+        default: 'False'
+      use-comments:
+        description: 'Show templates as comments'
+        required: true
+        type: choice
+        options: [ 'True', 'False' ]
+        default: 'False'
+
+jobs:
+  create-localization-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Run Python Action from external repo
+        id: run_action
+        uses: Knutschbert/create-localization-issue@main
+        secrets:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # base-dir: ""
+          # base-file: ""
+          branch: ${{ github.ref }}
+          commit: ${{ github.event.inputs.commit }}
+          # maintainers: ""
+          template: ${{ github.event.inputs.template }}
+          disable-mentions: ${{ github.event.inputs.disable-mentions }}
+          js-patch: ${{ github.event.inputs.js-patch }}
+          use-comments: ${{ github.event.inputs.use-comments }}
