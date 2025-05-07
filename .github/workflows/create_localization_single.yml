@@ -68,9 +68,13 @@ jobs:
           ISSUE_NUMBER: ${{ steps.create_issue.outputs.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "$COMMENTS" | jq -r '.[]' | while IFS= read -r comment; do
+          echo "$COMMENTS" | jq -c '.[]' | while read -r comment_json; do
+            # Decode the comment from JSON (preserves full string with newlines, quotes, etc.)
+            comment=$(echo "$comment_json" | jq -r '.')
+
             echo "Posting comment preview:"
             echo "$comment"
+
             tmpfile=$(mktemp)
             jq -n --arg body "$comment" '{body: $body}' > "$tmpfile"
 
