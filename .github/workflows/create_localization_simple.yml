@@ -57,3 +57,4 @@ jobs:
           disable-mentions: ${{ github.event.inputs.disable-mentions }}
           js-patch: ${{ github.event.inputs.js-patch }}
           use-comments: ${{ github.event.inputs.use-comments }}
+          sub-ref: ${{ github.action_ref }}
