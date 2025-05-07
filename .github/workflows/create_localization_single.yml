@@ -71,9 +71,8 @@ jobs:
           echo "$COMMENTS" | jq -r '.[]' | while IFS= read -r comment; do
             echo "Posting comment preview:"
             echo "$comment"
-            
             tmpfile=$(mktemp)
-            echo "$comment" > "$tmpfile"
+            jq -n --arg body "$comment" '{body: $body}' > "$tmpfile"
 
             gh api repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments \
               --method POST \
